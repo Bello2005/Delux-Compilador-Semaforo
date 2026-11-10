@@ -1,0 +1,6 @@
+# Calcula el area de un rectangulo
+base = 8
+altura = 5
+area = base * altura
+mostrar "El area es:"
+mostrar area
