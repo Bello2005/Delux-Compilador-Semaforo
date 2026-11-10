@@ -1,4 +1,0 @@
-leer edad
-si edad >= 18
-    mostrar "Mayor de edad"
-fin

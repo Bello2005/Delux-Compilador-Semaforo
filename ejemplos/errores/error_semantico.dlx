@@ -1,5 +1,0 @@
-suma = 0
-repetir 5 veces
-    suma = suma + valor
-fin
-mostrar suma

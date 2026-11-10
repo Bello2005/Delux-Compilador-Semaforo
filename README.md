@@ -66,7 +66,7 @@ El compilador recorre las cuatro fases clásicas (análisis léxico, sintáctico
 
 ## Vistazo rápido
 
-Un programa en DeLuX (`ejemplos/correctos/tabla.dlx`):
+Un programa en DeLuX que muestra la tabla de multiplicar de un número:
 
 ```text
 leer numero
@@ -242,8 +242,6 @@ flowchart TD
 | **Semántico** | Árbol → árbol verificado | Que las variables existan antes de usarse, que no se mezclen textos y números en operaciones aritméticas y que `repetir` no reciba valores negativos |
 | **Generación** | Árbol verificado → Python | Traduce cada instrucción a su equivalente en Python |
 
-La versión en imagen del diagrama está en [`docs/actividad-3/fases-compilador.svg`](docs/actividad-3/fases-compilador.svg).
-
 ---
 
 ## Traducción a Python
@@ -270,9 +268,9 @@ El compilador se detiene en el **primer error** y lo informa con su tipo, su lí
 
 | Tipo | Programa de prueba | Causa | Mensaje |
 | --- | --- | --- | --- |
-| **Léxico** | [`error_lexico.dlx`](ejemplos/errores/error_lexico.dlx) | El carácter `@` no existe en DeLuX | `Línea 3, columna 27: carácter no reconocido '@'` |
-| **Sintáctico** | [`error_sintactico.dlx`](ejemplos/errores/error_sintactico.dlx) | Un `si` sin `entonces` | `Línea 2, columna 14: se esperaba 'entonces' después de la condición` |
-| **Semántico** | [`error_semantico.dlx`](ejemplos/errores/error_semantico.dlx) | Se usa `valor` sin haberla definido | `Línea 3, columna 19: la variable 'valor' no está definida` |
+| **Léxico** | `error_lexico.dlx` | El carácter `@` no existe en DeLuX | `Línea 3, columna 27: carácter no reconocido '@'` |
+| **Sintáctico** | `error_sintactico.dlx` | Un `si` sin `entonces` | `Línea 2, columna 14: se esperaba 'entonces' después de la condición` |
+| **Semántico** | `error_semantico.dlx` | Se usa `valor` sin haberla definido | `Línea 3, columna 19: la variable 'valor' no está definida` |
 
 <details>
 <summary><b>¿Por qué cada error cae en esa fase?</b></summary>
@@ -289,14 +287,16 @@ El compilador se detiene en el **primer error** y lo informa con su tipo, su lí
 
 ## Programas de ejemplo
 
+Los seis programas, con su código completo y su análisis, están en el [documento de la Actividad 3](Actividad3_DeLuX_Compiladores.docx).
+
 | Archivo | Qué demuestra |
 | --- | --- |
-| [`correctos/area.dlx`](ejemplos/correctos/area.dlx) | Variables, multiplicación y `mostrar` con texto y números |
-| [`correctos/tabla.dlx`](ejemplos/correctos/tabla.dlx) | `leer`, `repetir`, suma y multiplicación |
-| [`correctos/nota.dlx`](ejemplos/correctos/nota.dlx) | `si … sino`, comparación, decimales, `mientras` y resta |
-| [`errores/error_lexico.dlx`](ejemplos/errores/error_lexico.dlx) | Error léxico: carácter `@` |
-| [`errores/error_sintactico.dlx`](ejemplos/errores/error_sintactico.dlx) | Error sintáctico: falta `entonces` |
-| [`errores/error_semantico.dlx`](ejemplos/errores/error_semantico.dlx) | Error semántico: variable no definida |
+| `area.dlx` | Variables, multiplicación y `mostrar` con texto y números |
+| `tabla.dlx` | `leer`, `repetir`, suma y multiplicación |
+| `nota.dlx` | `si … sino`, comparación, decimales, `mientras` y resta |
+| `error_lexico.dlx` | Error léxico: carácter `@` |
+| `error_sintactico.dlx` | Error sintáctico: falta `entonces` |
+| `error_semantico.dlx` | Error semántico: variable no definida |
 
 ---
 
@@ -304,19 +304,8 @@ El compilador se detiene en el **primer error** y lo informa con su tipo, su lí
 
 ```text
 .
-├── README.md                     ← estás aquí
-├── BITACORA.md                   ← decisiones del grupo y su porqué
-├── docs/
-│   ├── actividad-3/
-│   │   ├── Actividad3_DeLuX_Compiladores.docx
-│   │   ├── Actividad3_DeLuX_Compiladores.pdf
-│   │   ├── fases-compilador.svg
-│   │   └── fases-compilador.png
-│   └── historial/
-│       └── Actividad3_SEMA_Compiladores_v0.docx   ← primera versión (descartada)
-└── ejemplos/
-    ├── correctos/                ← programas válidos
-    └── errores/                  ← un error intencional por archivo
+├── README.md                           ← estás aquí
+└── Actividad3_DeLuX_Compiladores.docx  ← documento de la Actividad 3
 ```
 
 ---
@@ -329,7 +318,7 @@ El compilador se detiene en el **primer error** y lo informa con su tipo, su lí
 - [x] Dibujar las fases del compilador y explicar cada una
 - [x] Escribir tres programas correctos
 - [x] Escribir tres programas con errores (léxico, sintáctico y semántico) y explicarlos
-- [x] Documento entregable: [`docs/actividad-3`](docs/actividad-3)
+- [x] Documento entregable: [`Actividad3_DeLuX_Compiladores.docx`](Actividad3_DeLuX_Compiladores.docx)
 
 ### ⏳ Actividad 5 · Análisis léxico y sintáctico
 
@@ -353,7 +342,7 @@ El compilador se detiene en el **primer error** y lo informa con su tipo, su lí
 
 - **Commits propios y frecuentes.** Cada integrante sube su trabajo a medida que avanza, no todo al final.
 - **Mensajes en español y en infinitivo**, que digan qué cambia: `Agregar analizador léxico`, `Corregir columna en errores léxicos`.
-- **Toda decisión va a la [bitácora](BITACORA.md)**, con su fecha y su porqué.
+- **Toda decisión va a la bitácora**, con su fecha y su porqué.
 - **Todo el equipo entiende todo.** En la defensa, el docente puede preguntarle a cualquiera sobre cualquier parte, así que el trabajo se reparte pero se explica entre los dos.
 
 ---
