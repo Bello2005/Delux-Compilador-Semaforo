@@ -48,11 +48,4 @@ Registro de las decisiones del grupo: qué se decidió, por qué y cuándo. Las 
 
 ## Uso de herramientas de inteligencia artificial
 
-Durante la Actividad 3 se usó **Claude** (Anthropic) como asistente. Lo usamos para:
-
-- Proponer la estructura del documento y redactar borradores de las explicaciones de cada fase y de cada error.
-- Proponer los programas de ejemplo y verificar que las líneas y columnas de los errores fueran correctas.
-- Dibujar el diagrama de fases y dar formato al documento Word.
-- Organizar el repositorio y escribir el README.
-
-El grupo revisó y aprobó cada propuesta antes de entregarla, y definió el nombre DeLuX y los cambios a partir de las observaciones del docente. Esta sección se actualizará en cada actividad.
+- **Claude** (Anthropic, 2026), asistente de inteligencia artificial. Utilizado para organizar el documento y revisar la redacción de las explicaciones.
