@@ -1,0 +1,10 @@
+tiempo_verde = 20
+repetir 3 veces
+    encender verde
+    esperar tiempo_verde
+    encender amarillo
+    esperar 4
+    encender rojo
+    esperar tiempo_verde + 5
+fin
+apagar

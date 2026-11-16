@@ -1,0 +1,8 @@
+# Ciclo basico de un semaforo
+encender verde
+esperar 30
+cambiar
+esperar 5
+cambiar
+esperar 25
+apagar

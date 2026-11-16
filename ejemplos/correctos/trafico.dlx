@@ -1,0 +1,19 @@
+leer autos
+base = 15
+si autos > 10 entonces
+    tiempo = base * 2
+sino
+    tiempo = base
+fin
+ciclos = 3
+mientras ciclos > 0 hacer
+    encender verde
+    esperar tiempo
+    cambiar
+    esperar 5
+    cambiar
+    esperar 30
+    ciclos = ciclos - 1
+fin
+mostrar "Fin del turno"
+apagar
