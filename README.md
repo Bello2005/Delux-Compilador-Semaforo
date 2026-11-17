@@ -7,8 +7,8 @@
 Proyecto «Mi lenguaje, mi compilador» · Tema: **Semáforos** · Compiladores · Fundación Universitaria Claretiana · 2026
 
 ![Actividad 3](https://img.shields.io/badge/Actividad%203-completada-2ea44f)
-![Actividad 5](https://img.shields.io/badge/Actividad%205-pendiente-lightgrey)
-![Actividad 7](https://img.shields.io/badge/Actividad%207-pendiente-lightgrey)
+![Actividad 5](https://img.shields.io/badge/Actividad%205-completada-2ea44f)
+![Actividad 7](https://img.shields.io/badge/Actividad%207-completada-2ea44f)
 ![Salida](https://img.shields.io/badge/salida-Python-3776AB?logo=python&logoColor=white)
 ![Extensión](https://img.shields.io/badge/archivos-.dlx-111111)
 
@@ -94,7 +94,7 @@ fin
 apagar
 ```
 
-Lo que generará el compilador (Actividad 7):
+Lo que genera el compilador:
 
 ```python
 autos = leer()
@@ -162,7 +162,7 @@ stateDiagram-v2
 | Instrucción | Sintaxis | Qué hace | Ejemplo |
 | --- | --- | --- | --- |
 | Asignación | `variable = expresión` | Crea la variable o cambia su valor | `tiempo = base * 2` |
-| `mostrar` | `mostrar expresión` | Escribe en pantalla un texto, un número o un resultado | `mostrar "Autos: " + autos` |
+| `mostrar` | `mostrar expresión` | Escribe en pantalla un texto, un número o un resultado | `mostrar "Hay mucho tráfico"` |
 | `leer` | `leer variable` | Pide un valor al usuario y lo guarda | `leer autos` |
 | Comentario | `# texto` | Se ignora hasta el final de la línea | `# ciclo nocturno` |
 
@@ -285,6 +285,21 @@ OP_COMP      = ">" | "<" | ">=" | "<=" | "==" | "!=" ;
 
 La precedencia de operadores sale directamente de la gramática: cada nivel llama al siguiente, así que `*` se resuelve antes que `+`, y `+` antes que `>`.
 
+La gramática formal y ejecutable como referencia está en [`docs/gramatica.ebnf`](docs/gramatica.ebnf). El analizador de la Actividad 5 está en [`analizador.py`](analizador.py) y se ejecuta con Python 3, sin instalar paquetes:
+
+```powershell
+python analizador.py ejemplos/correctos/ciclo.dlx
+python analizador.py ejemplos/correctos/ciclo.dlx --tokens
+python analizador.py ejemplos/errores/error_lexico.dlx --solo-lexico
+python analizador.py ejemplos/correctos/ciclo.dlx --generar-python generados/ciclo.py
+python generados/ciclo.py
+python simulador.py ejemplos/correctos/ciclo.dlx
+```
+
+El modo normal ejecuta el lexer, el parser y el análisis semántico. `--tokens` imprime tipo, línea, columna y valor de cada token reconocido. `--solo-lexico` permite probar el lexer por separado. Los errores indican fase, línea y columna; los semánticos también nombran la regla. `--generar-python` traduce un programa válido a Python ejecutable con un semáforo simulado.
+
+La interfaz de [`simulador.py`](simulador.py) abre una ventana con las luces del semáforo, la instrucción en curso y el registro del programa. Puede abrir cualquier `.dlx` válido; `leer` solicita el dato en una ventana. La duración de `esperar` se acelera para recorrer el ciclo sin pausas largas.
+
 ---
 
 ## Fases del compilador
@@ -356,11 +371,15 @@ El compilador se detiene en el **primer error** y lo informa con su tipo, su lí
 
 </details>
 
-**Reglas semánticas previstas para la Actividad 7:**
+**Reglas semánticas implementadas:**
 
-1. No se puede usar una variable antes de definirla.
-2. El tiempo de `esperar` debe ser un número mayor que cero.
-3. No se permiten operaciones aritméticas entre texto y números (sí se pueden unir textos con `+`).
+1. **S1:** no se puede usar una variable antes de definirla.
+2. **S2:** el tiempo de `esperar` debe ser un número mayor que cero.
+3. **S3:** `repetir` acepta cantidades enteras no negativas.
+4. **S4:** las operaciones y condiciones deben usar tipos compatibles.
+5. **S5:** `esperar` y `cambiar` requieren que haya una luz encendida.
+
+Los errores semánticos indican código de regla, línea y columna. Las variables se guardan con su tipo; el análisis también sigue las definiciones seguras a través de las ramas de `si` y los ciclos.
 
 ---
 
@@ -371,9 +390,20 @@ El compilador se detiene en el **primer error** y lo informa con su tipo, su lí
 | [`correctos/ciclo.dlx`](ejemplos/correctos/ciclo.dlx) | Las cuatro instrucciones del tema en un ciclo normal |
 | [`correctos/ciclos.dlx`](ejemplos/correctos/ciclos.dlx) | `repetir`, variables y suma para calcular el tiempo del rojo |
 | [`correctos/trafico.dlx`](ejemplos/correctos/trafico.dlx) | `leer`, `si … sino`, multiplicación, `mientras` y resta |
+| [`correctos/semaforo_nocturno.dlx`](ejemplos/correctos/semaforo_nocturno.dlx) | Condición, valores lógicos e instrucciones del semáforo |
+| [`correctos/cruce_peatonal.dlx`](ejemplos/correctos/cruce_peatonal.dlx) | Ciclo peatonal con `repetir` y las luces |
+| [`correctos/decisiones.dlx`](ejemplos/correctos/decisiones.dlx) | Comparación, operadores lógicos y división |
 | [`errores/error_lexico.dlx`](ejemplos/errores/error_lexico.dlx) | Error léxico: carácter `@` |
 | [`errores/error_sintactico.dlx`](ejemplos/errores/error_sintactico.dlx) | Error sintáctico: `encender` sin color |
 | [`errores/error_semantico.dlx`](ejemplos/errores/error_semantico.dlx) | Error semántico: variable no definida |
+| [`errores/error_espera.dlx`](ejemplos/errores/error_espera.dlx) | Error semántico: espera de cero segundos |
+| [`errores/error_repetir.dlx`](ejemplos/errores/error_repetir.dlx) | Error semántico: repetición negativa |
+| [`errores/error_cambiar.dlx`](ejemplos/errores/error_cambiar.dlx) | Error semántico: cambiar con el semáforo apagado |
+| [`errores/error_tipos.dlx`](ejemplos/errores/error_tipos.dlx) | Error semántico: tiempo de tipo texto |
+
+Los nueve programas usados en la Actividad 5 están registrados en [`docs/resultados-actividad-5.md`](docs/resultados-actividad-5.md). Los trece programas y sus diagnósticos semánticos de la Actividad 7 están en [`docs/resultados-actividad-7.md`](docs/resultados-actividad-7.md).
+
+La traducción generada se puede ejecutar directamente con Python. El ejemplo guardado en [`generados/ciclo.py`](generados/ciclo.py) imprime cada comando del semáforo. La reflexión de decisiones está en [`docs/reflexion-actividad-7.md`](docs/reflexion-actividad-7.md).
 
 ---
 
@@ -381,16 +411,25 @@ El compilador se detiene en el **primer error** y lo informa con su tipo, su lí
 
 ```text
 .
+├── .gitignore                           ← excluye caché de Python
 ├── README.md                           ← estás aquí
 ├── BITACORA.md                         ← decisiones del grupo y uso de IA
+├── analizador.py                       ← lexer y parser de la Actividad 5
+├── simulador.py                        ← interfaz gráfica para animar un .dlx
 ├── Actividad3_DeLuX_Compiladores.docx  ← documento de la Actividad 3
 ├── docs/
 │   ├── Actividad3_DeLuX_Compiladores.pdf
 │   ├── fases-compilador.svg
-│   └── fases-compilador.png
-└── ejemplos/
+│   ├── fases-compilador.png
+│   ├── gramatica.ebnf
+│   ├── resultados-actividad-5.md
+│   ├── resultados-actividad-7.md
+│   └── reflexion-actividad-7.md
+├── ejemplos/
     ├── correctos/                      ← programas válidos
     └── errores/                        ← un error intencional por archivo
+└── generados/
+    └── ciclo.py                        ← Python producido y ejecutable
 ```
 
 ---
@@ -405,22 +444,22 @@ El compilador se detiene en el **primer error** y lo informa con su tipo, su lí
 - [x] Escribir tres programas con errores (léxico, sintáctico y semántico) y explicarlos
 - [x] Aplicar la retroalimentación del docente (instrucciones del tema Semáforos)
 
-### ⏳ Actividad 5 · Análisis léxico y sintáctico
+### ✅ Actividad 5 · Análisis léxico y sintáctico
 
-- [ ] Elegir el lenguaje de implementación del compilador
-- [ ] Decidir si se recortan extensiones del lenguaje para simplificar el lexer y el parser
-- [ ] Analizador léxico: leer un `.dlx` y producir la lista de tokens
-- [ ] Reportar caracteres no reconocidos con línea y columna
-- [ ] Escribir la gramática formal en su propio archivo
-- [ ] Analizador sintáctico que valide la estructura contra la gramática
-- [ ] Probar con los seis programas actuales más tres nuevos y guardar los resultados
+- [x] Elegir Python 3, sin dependencias externas
+- [x] Mantener las construcciones ya documentadas y formalizarlas en EBNF
+- [x] Analizador léxico: leer un `.dlx` y producir la lista de tokens
+- [x] Reportar caracteres no reconocidos con línea y columna
+- [x] Escribir la gramática formal en su propio archivo
+- [x] Analizador sintáctico que valide la estructura contra la gramática
+- [x] Probar los seis programas anteriores y tres nuevos; guardar los resultados
 
-### ⏳ Actividad 7 · Trabajo final
+### ✅ Actividad 7 · Trabajo final
 
-- [ ] Tabla de símbolos y error por variable no definida
-- [ ] Tres reglas semánticas, con regla y línea en cada error
-- [ ] Generación de código: traducción a Python con semáforo simulado
-- [ ] Reflexión escrita sobre lo más difícil y las decisiones tomadas
+- [x] Tabla de símbolos y error por variable no definida
+- [x] Reglas semánticas con regla y línea en cada error
+- [x] Generación de código: traducción a Python con semáforo simulado
+- [x] Reflexión escrita sobre lo más difícil y las decisiones tomadas
 
 ---
 

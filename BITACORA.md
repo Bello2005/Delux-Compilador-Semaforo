@@ -30,6 +30,23 @@ Registro de las decisiones del grupo: qué se decidió, por qué y cuándo. Las 
 | Se restauraron la bitácora, los `.dlx` y el diagrama | Se necesitan para la Actividad 5 y la bitácora es obligatoria |
 | Las extensiones del lenguaje se mantienen por ahora | El grupo revisará si recorta alguna al planear la Actividad 5 |
 
+## 2026-11-17 — Implementación de la Actividad 5
+
+- Se eligió Python 3 estándar para implementar el analizador sin dependencias externas.
+- Se conservó el conjunto de instrucciones y operadores del diseño de la Actividad 3; se escribió la gramática formal en `docs/gramatica.ebnf`.
+- Se implementaron el lexer y el parser en `analizador.py`. Los diagnósticos incluyen la fase, la línea y la columna. En ese momento, la revisión semántica quedó pendiente para la Actividad 7.
+- Se agregaron tres ejemplos válidos y se guardaron los resultados de los nueve programas en `docs/resultados-actividad-5.md`.
+- Asistencia de Codex (OpenAI, 2026): apoyo en la implementación del lexer/parser, redacción de la gramática y preparación de ejemplos y resultados.
+
+## 2026-11-17 — Implementación de la Actividad 7
+
+- Se agregó la construcción del árbol sintáctico y una tabla de símbolos con tipos para revisar variables definidas antes de usarse y operaciones compatibles.
+- Se programaron S1 (variable definida antes de usar), S2 (espera numérica positiva), S3 (repetición entera no negativa), S4 (tipos compatibles) y S5 (esperar/cambiar requiere una luz encendida); los errores semánticos muestran regla, línea y columna.
+- Se agregó la traducción de DeLuX a Python ejecutable, con simulación del semáforo y validación de cantidades que solo se conocen al leer datos.
+- Se añadieron ejemplos de error para S2, S3 y S5, un programa generado de muestra, los resultados de ejecución y la reflexión de la actividad.
+- Se añadió `simulador.py`, una interfaz Tkinter que ejecuta el Python generado y anima los cambios de luz y las esperas; las entradas de `leer` se solicitan en una ventana.
+- Asistencia de Codex (OpenAI, 2026): apoyo en el árbol sintáctico, las comprobaciones semánticas, la generación a Python, las pruebas y la documentación.
+
 ## 2026-11-10 — Cambio a lenguaje de propósito general: DeLuX
 
 - El lenguaje pasó de SEMA (solo semáforo) a **DeLuX**, un lenguaje de propósito general con palabras clave en español. Sus archivos usan la extensión `.dlx`.
