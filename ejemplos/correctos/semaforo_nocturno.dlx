@@ -1,0 +1,11 @@
+# Ajusta el ciclo para una vía nocturna
+tiempo_verde = 20
+si verdadero entonces
+    encender verde
+    esperar tiempo_verde
+    cambiar
+    esperar 4
+    cambiar
+    esperar 25
+fin
+apagar

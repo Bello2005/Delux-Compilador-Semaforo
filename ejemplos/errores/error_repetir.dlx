@@ -1,0 +1,4 @@
+cantidad = -2
+repetir cantidad veces
+    encender verde
+fin

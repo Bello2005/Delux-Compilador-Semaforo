@@ -1,0 +1,11 @@
+# Un ciclo corto cuando hay peatones
+peatones = 1
+repetir 2 veces
+    encender verde
+    esperar 15
+    encender amarillo
+    esperar 3
+    encender rojo
+    esperar 20
+fin
+apagar

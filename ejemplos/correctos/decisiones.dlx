@@ -1,0 +1,12 @@
+# Decide si extiende el tiempo de verde
+leer autos
+base = 15
+si autos >= 10 y no falso entonces
+    tiempo = base * 2
+sino
+    tiempo = base / 2
+fin
+encender verde
+esperar tiempo
+cambiar
+apagar
