@@ -32,6 +32,7 @@ class SimuladorDeLuX:
         self.hilo: threading.Thread | None = None
         self.color_actual: str | None = None
         self.ocupado = False
+        self.velocidad = 1.0
         self._crear_interfaz()
         self.raiz.protocol("WM_DELETE_WINDOW", self._cerrar)
         self.raiz.after(80, self._procesar_eventos)
@@ -88,7 +89,7 @@ class SimuladorDeLuX:
                                 insertbackground="#f8fafc", relief="flat", wrap="word",
                                 font=("Consolas", 9), padx=12, pady=10, state="disabled")
         self.registro.pack(fill="both", expand=True, padx=16, pady=(0, 16))
-        tk.Label(self.raiz, text="Las esperas se muestran aceleradas para que puedas recorrer el ciclo rápidamente.",
+        tk.Label(self.raiz, text="Las esperas se ejecutan en tiempo real.",
                  fg="#718198", bg="#101827", font=("Segoe UI", 9)).pack(pady=(0, 12))
 
     def _dibujar_semaforo(self) -> None:
@@ -204,13 +205,14 @@ class SimuladorDeLuX:
             self.color_actual = None
         self._dibujar_semaforo()
         self.estado.configure(text=nombres.get(accion, accion))
-        self.detalle.configure(text=f"Línea {linea}" + (" · espera acelerada" if accion == "esperar" else ""))
+        velocidad = self.velocidad
+        self.detalle.configure(text=f"Línea {linea}" + (" · tiempo real" if accion == "esperar" else ""))
         self._escribir(f"Línea {linea}: {nombres.get(accion, accion)}")
         if accion == "esperar":
             try:
-                demora = max(300, min(1800, int(float(valor) * 45)))
+                demora = max(1, int(float(valor) * 1000 / velocidad))
             except (TypeError, ValueError):
-                demora = 500
+                demora = max(1, int(1000 / velocidad))
         else:
             demora = 420
         self.raiz.after(demora, respuesta.set)
