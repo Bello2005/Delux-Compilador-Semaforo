@@ -95,6 +95,9 @@ class SimuladorDeLuX:
         self.detalle = tk.Label(panel_info, text="", fg="#94a3b8", bg="#182337",
                                 font=("Consolas", 10), anchor="w")
         self.detalle.pack(fill="x", padx=18, pady=(0, 12))
+        self.boton_generar = ttk.Button(panel_info, text="Generar Python",
+                                        command=self._generar_python, state="disabled")
+        self.boton_generar.pack(anchor="e", padx=16, pady=(0, 8))
         self.registro = tk.Text(panel_info, height=12, bg="#0d1522", fg="#cbd5e1",
                                 insertbackground="#f8fafc", relief="flat", wrap="word",
                                 font=("Consolas", 9), padx=12, pady=10, state="disabled")
@@ -136,15 +139,36 @@ class SimuladorDeLuX:
             messagebox.showerror("No se pudo cargar el programa", str(exc), parent=self.raiz)
             self.codigo = None
             self.boton_iniciar.configure(state="disabled")
+            self.boton_generar.configure(state="disabled")
             return
         self.ruta, self.codigo = ruta, codigo
         self.etiqueta_archivo.configure(text=ruta.name, fg="#cbd5e1")
         self.estado.configure(text="Programa validado. Listo para ejecutar.")
         self.detalle.configure(text="Lexer · parser · semántico · Python")
         self.boton_iniciar.configure(state="normal")
+        self.boton_generar.configure(state="normal")
         self.color_actual = None
         self._dibujar_semaforo()
         self._escribir(f"Programa cargado: {ruta.name}")
+
+    def _generar_python(self) -> None:
+        if not self.codigo:
+            return
+        destino = filedialog.asksaveasfilename(
+            title="Guardar código Python",
+            defaultextension=".py",
+            initialfile=f"{self.ruta.stem if self.ruta else 'programa'}.py",
+            filetypes=(("Archivos Python", "*.py"), ("Todos los archivos", "*.*")),
+        )
+        if not destino:
+            return
+        try:
+            Path(destino).write_text(self.codigo, encoding="utf-8")
+        except OSError as exc:
+            messagebox.showerror("No se pudo guardar el código", str(exc), parent=self.raiz)
+            return
+        self._escribir(f"Código Python generado: {Path(destino).name}")
+        messagebox.showinfo("Código generado", f"Se guardó el programa Python en:\n{destino}", parent=self.raiz)
 
     def _iniciar(self) -> None:
         if not self.codigo or self.ocupado:
