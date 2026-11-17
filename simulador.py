@@ -32,7 +32,8 @@ class SimuladorDeLuX:
         self.hilo: threading.Thread | None = None
         self.color_actual: str | None = None
         self.ocupado = False
-        self.velocidad = 1.0
+        self.velocidad = tk.DoubleVar(value=1.0)
+        self.etiqueta_velocidad: tk.Label | None = None
         self._crear_interfaz()
         self.raiz.protocol("WM_DELETE_WINDOW", self._cerrar)
         self.raiz.after(80, self._procesar_eventos)
@@ -59,6 +60,15 @@ class SimuladorDeLuX:
         self.boton_iniciar.pack(side="left", padx=(10, 0))
         self.boton_detener = ttk.Button(controles, text="■  Detener", command=self._detener, state="disabled")
         self.boton_detener.pack(side="left", padx=(10, 0))
+        tk.Label(controles, text="Velocidad", fg="#cbd5e1", bg="#101827",
+                 font=("Segoe UI", 9)).pack(side="left", padx=(18, 6))
+        self.control_velocidad = ttk.Scale(controles, from_=0.25, to=10.0,
+                                           variable=self.velocidad, command=self._actualizar_velocidad,
+                                           length=130)
+        self.control_velocidad.pack(side="left")
+        self.etiqueta_velocidad = tk.Label(controles, text="1x (normal)", width=13,
+                                           fg="#94a3b8", bg="#101827", font=("Segoe UI", 9))
+        self.etiqueta_velocidad.pack(side="left", padx=(6, 0))
         self.etiqueta_archivo = tk.Label(controles, text="Ningún archivo seleccionado",
                                          fg="#94a3b8", bg="#101827", font=("Segoe UI", 9))
         self.etiqueta_archivo.pack(side="right", padx=4)
@@ -89,8 +99,14 @@ class SimuladorDeLuX:
                                 insertbackground="#f8fafc", relief="flat", wrap="word",
                                 font=("Consolas", 9), padx=12, pady=10, state="disabled")
         self.registro.pack(fill="both", expand=True, padx=16, pady=(0, 16))
-        tk.Label(self.raiz, text="Las esperas se ejecutan en tiempo real.",
+        tk.Label(self.raiz, text="Velocidad 1x = tiempo real. Ajusta el control para acelerar o ralentizar las esperas.",
                  fg="#718198", bg="#101827", font=("Segoe UI", 9)).pack(pady=(0, 12))
+
+    def _actualizar_velocidad(self, _valor=None) -> None:
+        velocidad = max(0.25, min(10.0, self.velocidad.get()))
+        texto = "1x (normal)" if abs(velocidad - 1.0) < 0.03 else f"{velocidad:.1f}x"
+        if self.etiqueta_velocidad:
+            self.etiqueta_velocidad.configure(text=texto)
 
     def _dibujar_semaforo(self) -> None:
         self.canvas.delete("all")
@@ -205,8 +221,8 @@ class SimuladorDeLuX:
             self.color_actual = None
         self._dibujar_semaforo()
         self.estado.configure(text=nombres.get(accion, accion))
-        velocidad = self.velocidad
-        self.detalle.configure(text=f"Línea {linea}" + (" · tiempo real" if accion == "esperar" else ""))
+        velocidad = max(0.25, min(10.0, self.velocidad.get()))
+        self.detalle.configure(text=f"Línea {linea}" + (f" · velocidad {velocidad:.1f}x" if accion == "esperar" else ""))
         self._escribir(f"Línea {linea}: {nombres.get(accion, accion)}")
         if accion == "esperar":
             try:
