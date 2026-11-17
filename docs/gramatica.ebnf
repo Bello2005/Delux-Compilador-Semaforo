@@ -1,0 +1,37 @@
+(* Gramática de DeLuX. Los saltos de línea separan instrucciones. *)
+programa       = { salto | sentencia salto } ;
+sentencia      = asignacion | mostrar | leer | semaforo
+               | condicion | repetir | mientras ;
+asignacion     = ID , "=" , expresion ;
+mostrar        = "mostrar" , expresion ;
+leer           = "leer" , ID ;
+semaforo       = "encender" , COLOR
+               | "esperar" , expresion
+               | "cambiar"
+               | "apagar" ;
+condicion      = "si" , expresion , "entonces" , salto , bloque
+                 , [ "sino" , salto , bloque ] , "fin" ;
+repetir        = "repetir" , expresion , "veces" , salto , bloque , "fin" ;
+mientras       = "mientras" , expresion , "hacer" , salto , bloque , "fin" ;
+bloque         = { salto | sentencia salto } ;
+expresion      = disyuncion ;
+disyuncion     = conjuncion , { "o" , conjuncion } ;
+conjuncion     = negacion , { "y" , negacion } ;
+negacion       = "no" , negacion | comparacion ;
+comparacion    = suma , [ operador_comparacion , suma ] ;
+suma           = producto , { ( "+" | "-" ) , producto } ;
+producto       = unario , { ( "*" | "/" ) , unario } ;
+unario         = "-" , unario | primario ;
+primario       = NUMERO | TEXTO | LOGICO | ID | "(" , expresion , ")" ;
+operador_comparacion = ">" | "<" | ">=" | "<=" | "==" | "!=" ;
+COLOR          = "rojo" | "amarillo" | "verde" ;
+salto          = NL ;
+
+(* Un comentario comienza con # y ocupa hasta el final de la línea.
+   Los espacios y tabuladores separan tokens. Los decimales usan punto.
+   Reglas léxicas de los terminales:
+   ID     = letra , { letra | dígito | "_" } ;
+   NUMERO = dígito , { dígito } , [ "." , dígito , { dígito } ] ;
+   TEXTO  = comilla_doble , { carácter excepto comilla_doble o salto } , comilla_doble ;
+   LOGICO = "verdadero" | "falso" ;
+   Las palabras reservadas se reconocen antes que ID. *)
