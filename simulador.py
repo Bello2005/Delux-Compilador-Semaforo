@@ -154,20 +154,22 @@ class SimuladorDeLuX:
     def _generar_python(self) -> None:
         if not self.codigo:
             return
-        destino = filedialog.asksaveasfilename(
-            title="Guardar código Python",
-            defaultextension=".py",
-            initialfile=f"{self.ruta.stem if self.ruta else 'programa'}.py",
-            filetypes=(("Archivos Python", "*.py"), ("Todos los archivos", "*.*")),
-        )
-        if not destino:
+        carpeta = Path(__file__).resolve().parent / "generados"
+        nombre = f"{self.ruta.stem if self.ruta else 'programa'}.py"
+        destino = carpeta / nombre
+        if destino.exists() and not messagebox.askyesno(
+            "Reemplazar archivo",
+            f"{nombre} ya existe en la carpeta generados. ¿Quieres reemplazarlo?",
+            parent=self.raiz,
+        ):
             return
         try:
-            Path(destino).write_text(self.codigo, encoding="utf-8")
+            carpeta.mkdir(parents=True, exist_ok=True)
+            destino.write_text(self.codigo, encoding="utf-8")
         except OSError as exc:
             messagebox.showerror("No se pudo guardar el código", str(exc), parent=self.raiz)
             return
-        self._escribir(f"Código Python generado: {Path(destino).name}")
+        self._escribir(f"Código Python generado: generados/{nombre}")
         messagebox.showinfo("Código generado", f"Se guardó el programa Python en:\n{destino}", parent=self.raiz)
 
     def _iniciar(self) -> None:
